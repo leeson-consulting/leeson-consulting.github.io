@@ -20,7 +20,7 @@
     
     
       
-        <title>Qere and Ketiv - Leeson Consulting</title>
+        <title>Qere and Ketiv - Written to be Read - Leeson Consulting</title>
       
     
     
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#qere-and-ketiv" class="md-skip">
+        <a href="#qere-and-ketiv-written-to-be-read" class="md-skip">
           Skip to content
         </a>
       
@@ -97,7 +97,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Qere and Ketiv
+              Qere and Ketiv - Written to be Read
             
           </span>
         </div>
@@ -713,7 +713,7 @@
   <div class="md-content" data-md-component="content">
     <div class="md-content__inner">
       <header class="md-typeset">
-        <h1 id="qere-and-ketiv">Qere and Ketiv</h1>
+        <h1 id="qere-and-ketiv-written-to-be-read">Qere and Ketiv - Written to be Read</h1>
       </header>
       
         <article class="md-post md-post--excerpt">
@@ -735,7 +735,7 @@
           
           <li class="md-meta__item">
             
-              5 min read
+              7 min read
             
           </li>
         
@@ -744,10 +744,10 @@
     </div>
   </header>
   <div class="md-post__content md-typeset">
-    <h2 id="error-cascade-in-ppp-cobs"><a class="toclink" href="2024/04/23/error-cascade-in-ppp-cobs/">Error Cascade in PPP COBS</a></h2>
+    <h2 id="error-cascade-in-cobs-encoded-data"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/">Error Cascade in COBS Encoded Data</a></h2>
 <p>Consistent Overhead Byte Stuffing (COBS) is used to frame byte-oriented communications and is described in detail in <a href="https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing">Wikipedia</a> and elsewhere.
 COBS is used as a lower overhead alternative to HDLC Byte Stuffing.</p>
-<h3 id="cobs-overview"><a class="toclink" href="2024/04/23/error-cascade-in-ppp-cobs/#cobs-overview">COBS Overview</a></h3>
+<h3 id="cobs-overview"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#cobs-overview">COBS Overview</a></h3>
 <p>A short explanation of COBS is that it replaces each <code>0x00</code> encountered in the data
 with a linked list of the distances between each <code>0x00</code>.
 Since the links can never be <code>0x00</code>,
@@ -755,19 +755,19 @@ the only overhead is the insertion of COBS Link-Bytes
 to bridge the gaps between those <code>0x00</code> values more than 255 bytes apart.</p>
 <p>COBS treats data exhausted of (or not containing) <code>0x00</code> as having a final <code>0x00</code> at the end of data.
 This dictates the repeated insertion of COBS Link-Bytes until the final link,
-which sets the location of the <code>0x00</code> used as the Frame Terminator thus <em>sealing</em> the COBS frame.</p>
+which sets the location of the <code>0x00</code> Frame Terminator <em>sealing</em> the COBS frame.</p>
 <p>Each COBS Link-Byte adds overhead at a consistent <em>worst-case rate</em> of 1/255 of the message length.
 This is much better than the <em>worst-case rate</em> for HDLC Byte Stuffing, which is twice the message length.</p>
 <div class="admonition overhead">
 <p class="admonition-title">Overhead</p>
 <p>HDLC Byte Stuffing overhead is very sensitive to message content.
 Uniformly distributed random data (eg. encrypted data), achieves an average overhead of 2/256.
-However, high overhead is associated with data contain many HDLC <em>Frame Sequence</em> (<code>0x7e</code>) or <em>Control Escape</em> (<code>0x7d</code>) bytes.</p>
+However, high overhead is associated with data containin many HDLC <em>Frame Sequence</em> (<code>0x7e</code>) bytes or <em>Control Escape</em> (<code>0x7d</code>) bytes.</p>
 <p>COBS, by contrast, is <strong>not</strong> very sensitive to message content.
 The worst and average overhead for random data is the same.
-The lowest overhead is the reciprocal of the message length, which is achieved by messages contain 0x00 at least once every 255 bytes.</p>
+The lowest overhead is the reciprocal of the message length, which is achieved by messages containing 0x00 at least once every 255 bytes.</p>
 </div>
-<h3 id="cobs-checksum-interactions"><a class="toclink" href="2024/04/23/error-cascade-in-ppp-cobs/#cobs-checksum-interactions">COBS-Checksum Interactions</a></h3>
+<h3 id="cobs-checksum-interactions"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#cobs-checksum-interactions">COBS Checksum Interactions</a></h3>
 <p>COBS is simply a framing scheme and does not define checksum requirements per se.</p>
 <p>Nevertheless a COBS receiver can correctly frame COBS encoded data 99.6% of the time due to the self-sealing nature of the frame.
 Undetected errors can still occur, but the frames themselves should be generally identifiable.</p>
@@ -775,7 +775,7 @@ Undetected errors can still occur, but the frames themselves should be generally
 <p>If the checksum contains <code>0x00</code> then it will either need to be placed outside the frame or encoded so that it can be placed within the frame.
 Placing the checksum outside the frame introduces problems with frame synchronisation and should be avoided except under controlled conditions.
 COBS encoding the checksum adds immediate overhead in the form of a Link-Byte and generally complicates the process.</p>
-<h3 id="ppp-cobs-checksums"><a class="toclink" href="2024/04/23/error-cascade-in-ppp-cobs/#ppp-cobs-checksums">PPP COBS Checksums</a></h3>
+<h3 id="ppp-cobs-checksums"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#ppp-cobs-checksums">PPP COBS Checksums</a></h3>
 <p>Stuart Cheshire presented COBS for his <a href="http://stuartcheshire.org/papers/Dissertation.ps">PhD</a>,
 and originally at <a href="http://stuartcheshire.org/papers/COBSforSIGCOMM.ps">SIGCOMM '97</a>.
 The focus for these and other discussions of COBS was around the reduced overhead compared to HDLC-style Byte Stuffing.</p>
@@ -828,10 +828,23 @@ that would then need to be Byte Stuffed to ensure frame delineation.</p>
 <p>PPP COBS is not alone in this regard.</p>
 <p><strong>Every</strong> COBS recommendation and implementation I have seen chooses to append a checksum to the data prior to COBS encoding.
 While this is much simpler, it can significantly reduce the strength of the checksum as we shall see.</p>
-<h3 id="cobs-error-cascade"><a class="toclink" href="2024/04/23/error-cascade-in-ppp-cobs/#cobs-error-cascade">COBS Error Cascade</a></h3>
+<h3 id="cobs-error-cascade"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#cobs-error-cascade">COBS Error Cascade</a></h3>
 <p>When any link in a COBS chain is corrupted, the COBS decoder will incorrectly decode the next and subsequent links.
-A single COBS link error can therefore cascade into multiple errors at a rate of 8 bits per link (on average for uniform random data).</p>
-<p>When the underlying data is long or contains frequent <code>0x00</code> values, many corruptions will occur due to the cascade.</p>
+A single COBS link error can cascade into multiple errors at a rate of 8 bits per link (on average for uniform random data).
+When the underlying data contains <code>0x00</code> values or is simply <em>long enough</em>, many corruptions will occur due to the abundance of links.</p>
+<p>The following example shows a slice through some COBS data as it was sent (error free).
+The green <code>link(x)</code> bytes represent the COBS chain, with arbitrary non-zero data in between.</p>
+<p><img alt="COBS Data - As sent" src="content/cobs_error_cascade_example_as_sent.svg" /></p>
+<p>Now consider the same COBS data as received.
+A single bit error has occurred in the first link shown, turning <code>link(5)</code> into <code>link(1)</code>.
+The COBS decoder will now follow the path highlighted by the orange bytes,
+while at the same time skipping over the actual link bytes highlighted in cyan.</p>
+<p><img alt="COBS Data - As received" src="content/cobs_error_cascade_example_as_received.svg" /></p>
+<p>After a few links the chain is restored at <code>link(42)</code> and continues unaffected to <em>seal</em> the frame,
+making the received error undetectable to the frame length check.</p>
+<p>In this contrived example, the COBS decoder will produce an additional 8 errors as the result of a single error in the first link.
+This can be far worse in general.</p>
+<h3 id="the-effect-of-error-cascade-on-error-detection"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#the-effect-of-error-cascade-on-error-detection">The Effect of Error Cascade on Error Detection</a></h3>
 <p>If a checksum is used to detect data corruptions
 and that checksum is applied to the COBS encoded data,
 the checksum will be able to gate the decoding process
@@ -839,13 +852,38 @@ thus generally avoiding the error cascade.</p>
 <p>However, if the checksum is applied to the unencoded data
 the checksum will not gate the decoding process.
 Instead the checksum will be asked to detect the error cascade
-introduced by the decoding process.
-If a CRC is used as the checksum,
-its error detection performance <strong>will be compromised</strong> by the cascade.</p>
-<p>In general, the probability of an undetected error in COBS framed data
-protected by a CRC applied to the unencoded data is:
-<code>1/255 * 1/2^poly_degree</code>.</p>
-<p>While this is low, it is many orders of magnitude worse than simply applying the same CRC to the COBS encoded data.</p>
+introduced by the decoding process.</p>
+<p>If a CRC is used as the checksum, it may be able to detect some of the cascade as error bursts.
+But even it does, its error detection performance <strong>will be compromised</strong> making it less able to detect received errors.</p>
+<p>For this to cause an actual problem an error has to occur in one of the COBS links and the CRC check needs to fail (False Negative).
+This may be rare in practice for encrypted data, but data heavily biased with <code>0x00</code> values will be susceptible.</p>
+<p>This kind of zero-rich data occurs commonly enough in the wild for it to form the basis of <a href="https://capnproto.org/encoding.html">CAP'N PROTO's "Packing" Scheme</a>
+For instance small valued, multi-byte integers often have <code>0x00</code> MS-Bytes, Flag-fields tend to default to <code>0x00</code>, Embedded strings have NUL terminators, etc.</p>
+<p>Putting the likihood of a perfect storm aside for the moment,
+we can say in the case of a COBS Error Cascade affecting a COBS frame,
+the probability of an undetected error where a CRC is applied to the unencoded data tends towards:</p>
+<p><code>1/255 * 1/2^crc_poly_degree</code></p>
+<p>While this is low, it is many orders of magnitude worse
+than the unconditional probability of an undetected error
+in a COBS frame where the COBS encoded data is protected by the same CRC.</p>
+<h3 id="efficient-checksum-encoding"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#efficient-checksum-encoding">Efficient Checksum Encoding</a></h3>
+<p>While the benefits of applying the CRC to the COBS encoded data are clear,
+methods for efficiently encoding the CRC for the frame are not.</p>
+<p>COBS encoding the CRC adds an additional COBS Link-Byte,
+which makes the best COBS overhead approach that of the average HDLC overhead.</p>
+<p>Modifying frame detection to use a <code>0x00</code> to mark the start of frame
+and a length field to locate the CRC could also be used with care.
+But this would not suit PPP COBS which uses <code>0x7e</code> as an HDLC-compatible COBS Terminator.</p>
+<p>Reserving two flag bits in the CRC field allows for CRC-14 to be used in place of CRC-16.
+Setting each bit to 1 when the corresponding byte in the CRC is <code>0x00</code>
+ensures that the CRC value is always compatible with the frame.</p>
+<p>This is ok, as long as the replacement CRC-14 can perform as well as the original CRC-16.
+However the overhead increases to four bits for for CRC-32, which limits CRC replacements to CRC-28 or less.</p>
+<p>A minature 3-bit COBS link could prefix the CRC data in a similar vein.
+But this gets complicated and only offers one more bit over using flags for CRC-32.</p>
+<p>So are there any better approaches?
+It turns out that the answer is yes.
+These will be the subject of follow-up posts.</p>
     
   </div>
 </article>
