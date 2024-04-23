@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../../">
+        <link rel="prev" href="../cobs/">
       
       
         <link rel="next" href="../foss/">
@@ -427,6 +427,10 @@
       
         
       
+        
+      
+        
+      
     
     
       
@@ -457,6 +461,29 @@
             Categories
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../cobs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    COBS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -553,6 +580,29 @@
   
   <span class="md-ellipsis">
     Leeson
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../ppp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PPP
   </span>
   
 
@@ -686,6 +736,140 @@
     <div class="md-post__meta md-meta">
       <ul class="md-meta__list">
         <li class="md-meta__item">
+          <time datetime="2024-04-23 00:00:00">April 23, 2024</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="./" class="md-meta__link">CRC</a>, 
+              <a href="../ppp/" class="md-meta__link">PPP</a>, 
+              <a href="../cobs/" class="md-meta__link">COBS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              5 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="error-cascade-in-ppp-cobs"><a class="toclink" href="../../2024/04/23/error-cascade-in-ppp-cobs/">Error Cascade in PPP COBS</a></h2>
+<p>Consistent Overhead Byte Stuffing (COBS) is used to frame byte-oriented communications and is described in detail in <a href="https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing">Wikipedia</a> and elsewhere.
+COBS is used as a lower overhead alternative to HDLC Byte Stuffing.</p>
+<h3 id="cobs-overview"><a class="toclink" href="../../2024/04/23/error-cascade-in-ppp-cobs/#cobs-overview">COBS Overview</a></h3>
+<p>A short explanation of COBS is that it replaces each <code>0x00</code> encountered in the data
+with a linked list of the distances between each <code>0x00</code>.
+Since the links can never be <code>0x00</code>,
+the only overhead is the insertion of COBS Link-Bytes
+to bridge the gaps between those <code>0x00</code> values more than 255 bytes apart.</p>
+<p>COBS treats data exhausted of (or not containing) <code>0x00</code> as having a final <code>0x00</code> at the end of data.
+This dictates the repeated insertion of COBS Link-Bytes until the final link,
+which sets the location of the <code>0x00</code> used as the Frame Terminator thus <em>sealing</em> the COBS frame.</p>
+<p>Each COBS Link-Byte adds overhead at a consistent <em>worst-case rate</em> of 1/255 of the message length.
+This is much better than the <em>worst-case rate</em> for HDLC Byte Stuffing, which is twice the message length.</p>
+<div class="admonition overhead">
+<p class="admonition-title">Overhead</p>
+<p>HDLC Byte Stuffing overhead is very sensitive to message content.
+Uniformly distributed random data (eg. encrypted data), achieves an average overhead of 2/256.
+However, high overhead is associated with data contain many HDLC <em>Frame Sequence</em> (<code>0x7e</code>) or <em>Control Escape</em> (<code>0x7d</code>) bytes.</p>
+<p>COBS, by contrast, is <strong>not</strong> very sensitive to message content.
+The worst and average overhead for random data is the same.
+The lowest overhead is the reciprocal of the message length, which is achieved by messages contain 0x00 at least once every 255 bytes.</p>
+</div>
+<h3 id="cobs-checksum-interactions"><a class="toclink" href="../../2024/04/23/error-cascade-in-ppp-cobs/#cobs-checksum-interactions">COBS-Checksum Interactions</a></h3>
+<p>COBS is simply a framing scheme and does not define checksum requirements per se.</p>
+<p>Nevertheless a COBS receiver can correctly frame COBS encoded data 99.6% of the time due to the self-sealing nature of the frame.
+Undetected errors can still occur, but the frames themselves should be generally identifiable.</p>
+<p>Things become more complex when a checksum is added to detect data corruptions.</p>
+<p>If the checksum contains <code>0x00</code> then it will either need to be placed outside the frame or encoded so that it can be placed within the frame.
+Placing the checksum outside the frame introduces problems with frame synchronisation and should be avoided except under controlled conditions.
+COBS encoding the checksum adds immediate overhead in the form of a Link-Byte and generally complicates the process.</p>
+<h3 id="ppp-cobs-checksums"><a class="toclink" href="../../2024/04/23/error-cascade-in-ppp-cobs/#ppp-cobs-checksums">PPP COBS Checksums</a></h3>
+<p>Stuart Cheshire presented COBS for his <a href="http://stuartcheshire.org/papers/Dissertation.ps">PhD</a>,
+and originally at <a href="http://stuartcheshire.org/papers/COBSforSIGCOMM.ps">SIGCOMM '97</a>.
+The focus for these and other discussions of COBS was around the reduced overhead compared to HDLC-style Byte Stuffing.</p>
+<p>The initial COBS application was intended for PPP,
+which can be seen in the <a href="https://www.ietf.org/archive/id/draft-ietf-pppext-cobs-00.txt">PPP COBS Proposal</a>
+written around the same time as his PhD.
+PPP itself is described in <a href="https://datatracker.ietf.org/doc/html/rfc1662.html">RFC 1662</a>
+and <strong>does</strong> specify the use of a "... Frame Check Sequence for error detection":</p>
+<blockquote>
+<p>The FCS field is calculated over all bits of the Address, Control,
+Protocol, Information and Padding fields, not including any start
+and stop bits (asynchronous) nor any bits (synchronous) or octets
+(asynchronous or synchronous) inserted for transparency.  This
+also does not include the Flag Sequences nor the FCS field itself.</p>
+<p>When octets are received which are flagged in the Async-
+Control-Character-Map, they are discarded before calculating
+the FCS.</p>
+</blockquote>
+<p>The <em>Async-Control-Character-Map</em> is outside the scope of present discussions,
+aside from noting that it includes the HDLC <em>Frame Sequence</em> (<code>0x7e</code>) and
+<em>Control Escape</em> (<code>0x7d</code>) used to perform Byte Stuffing.</p>
+<p>However, in the PPP COBS Proposal the self-sealing nature of COBS Frames leads to the observation that:</p>
+<blockquote>
+<p>If one of the code byte octets is lost or corrupted, then the block
+will be miscounted.  This is likely to ultimately result in the
+inclusion of the trailing 7E within the data portion of an erroneous
+COBS block.  The receiver will detect this as either an error (if it
+does not support preemption) or as a preempted message.  In the
+latter case, the falsely preempted message will be discarded when the
+next true preemption occurs.  If the 7E still falls on a natural
+boundary between COBS blocks, then COBS will not detect the error,
+but the standard Frame Check Sequence (FCS) will be used to detect
+the corruption.</p>
+</blockquote>
+<p>Later in an example implementation we find the following comment:</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cm">/*</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="cm">* It turns out to be horribly complicated to support both the</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="cm">* scan-ahead functions and the CRC calculation at the same time</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="cm">* since the last byte of the CRC (or even both bytes) may be 00.</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="cm">* Thus, it is necessary in this implementation to do the CRC</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="cm">* first and the COBS encoding second in two separate steps.  If</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="cm">* the COBS output were fed into a simple linear output buffer</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="cm">* big enough to hold the largest packet, then this could be</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="cm">* greatly simplified.</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="cm">*/</span>
+</span></code></pre></div>
+<p>So PPP COBS clearly favours calculating the FCS as a CRC applied to the PPP packet
+<strong>prior</strong> to COBS encoding since the CRC may itself contain <code>0x00</code> values
+that would then need to be Byte Stuffed to ensure frame delineation.</p>
+<p>PPP COBS is not alone in this regard.</p>
+<p><strong>Every</strong> COBS recommendation and implementation I have seen chooses to append a checksum to the data prior to COBS encoding.
+While this is much simpler, it can significantly reduce the strength of the checksum as we shall see.</p>
+<h3 id="cobs-error-cascade"><a class="toclink" href="../../2024/04/23/error-cascade-in-ppp-cobs/#cobs-error-cascade">COBS Error Cascade</a></h3>
+<p>When any link in a COBS chain is corrupted, the COBS decoder will incorrectly decode the next and subsequent links.
+A single COBS link error can therefore cascade into multiple errors at a rate of 8 bits per link (on average for uniform random data).</p>
+<p>When the underlying data is long or contains frequent <code>0x00</code> values, many corruptions will occur due to the cascade.</p>
+<p>If a checksum is used to detect data corruptions
+and that checksum is applied to the COBS encoded data,
+the checksum will be able to gate the decoding process
+thus generally avoiding the error cascade.</p>
+<p>However, if the checksum is applied to the unencoded data
+the checksum will not gate the decoding process.
+Instead the checksum will be asked to detect the error cascade
+introduced by the decoding process.
+If a CRC is used as the checksum,
+its error detection performance <strong>will be compromised</strong> by the cascade.</p>
+<p>In general, the probability of an undetected error in COBS framed data
+protected by a CRC applied to the unencoded data is:
+<code>1/255 * 1/2^poly_degree</code>.</p>
+<p>While this is low, it is many orders of magnitude worse than simply applying the same CRC to the COBS encoded data.</p>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
           <time datetime="2024-04-19 00:00:00">April 19, 2024</time></li>
         
           <li class="md-meta__item">
@@ -752,7 +936,7 @@ especially on Big-Endian architectures where it has had no testing to date due t
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Qere and Ketiv">
+          <a href="../cobs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: COBS">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -762,7 +946,7 @@ especially on Big-Endian architectures where it has had no testing to date due t
                 Previous
               </span>
               <div class="md-ellipsis">
-                Qere and Ketiv
+                COBS
               </div>
             </div>
           </a>
