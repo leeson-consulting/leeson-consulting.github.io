@@ -12,7 +12,7 @@
         <link rel="prev" href="..">
       
       
-        <link rel="next" href="category/byte-stuffing/">
+        <link rel="next" href="category/babs/">
       
       
       <link rel="icon" href="../assets/leeson_logo_192x192.png">
@@ -431,6 +431,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
       
@@ -461,6 +469,29 @@
             Categories
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/babs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BABS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -540,11 +571,57 @@
   
   
     <li class="md-nav__item">
+      <a href="category/checksums/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Checksums
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
       <a href="category/foss/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     FOSS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/hashes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hashes
   </span>
   
 
@@ -614,6 +691,29 @@
   
   <span class="md-ellipsis">
     PPP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/protocol-design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Protocol Design
   </span>
   
 
@@ -740,6 +840,87 @@
       <header class="md-typeset">
         <h1 id="qere-and-ketiv-written-to-be-read">Qere and Ketiv - Written to be Read</h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2024-04-25 00:00:00">April 25, 2024</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/checksums/" class="md-meta__link">Checksums</a>, 
+              <a href="category/crc/" class="md-meta__link">CRC</a>, 
+              <a href="category/hashes/" class="md-meta__link">Hashes</a>, 
+              <a href="category/cobs/" class="md-meta__link">COBS</a>, 
+              <a href="category/babs/" class="md-meta__link">BABS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="hybrid-cobs-babs-hcbs"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/">Hybrid COBS + BABS (HCBS)</a></h2>
+<p>This post builds on what we've seen from COBS and BABS
+to define a simple hybridisation of the two
+that is not susceptible to error cascade
+while balancing transmission and computational overhead.</p>
+<h3 id="initial-cobs-link"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/#initial-cobs-link">Initial COBS Link</a></h3>
+<p>The classical COBS chain starts with a COBS Link Byte.
+This guarantees no additional overhead for the next 255 bytes.
+But since data lengths are often shorter than this,
+it raises the question of whether the initial COBS Link can be made smaller.</p>
+<p>HCBS permits the Encapsulating Protocol to define the width of the initial COBS Link.
+For short messages, a 5-bit or even 4-bit link may be sufficient.</p>
+<p>Relaxing this restriction allows the initial COBS Link to be worked into the Protocol's Frame Header,
+should the design accomodate.</p>
+<p>The potential benefit is obvious - one less byte overhead for short messages.</p>
+<h3 id="babs-crc-space-cost"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/#babs-crc-space-cost">BABS CRC - Space Cost</a></h3>
+<p>As we saw earlier, the Byte Stuffing mechanism may present issues for data CRCs.
+For COBS, the simple approach of Byte Stuffing the data and its CRC together can compromise error detection.
+However, the alternative of separately Byte Stuffing the CRC of the COBS-data increases transmission overhead.</p>
+<p>A solution to these problems is to:</p>
+<ol>
+<li>Calculate the COBS-data CRC,</li>
+<li>Using a lower degree polynomial than normal,</li>
+<li>Then BABS the CRC,</li>
+<li>And append to the COBS-data</li>
+</ol>
+<p><code>BABS(CRC_Degree)</code> will add <em>at most</em> one bit overhead, which means that <code>BABS(CRC_15)</code> takes the same space as <code>CRC_16</code>.
+Similarly, <code>BABS(CRC_31)</code> takes the same space as <code>CRC_32</code>.</p>
+<p>Specific polynomial choices depend on the design requirements, but some <em>good</em> lower degree polynomials include:</p>
+<ul>
+<li><code>CRC-15, 0x60d</code> HD4 to 2046 data bytes</li>
+<li><code>CRC-15, 0x2e75</code> HD6 to 14 data bytes</li>
+<li><code>CRC-23, 0x5781eb</code> HD6 to 253 data bytes</li>
+<li><code>CRC-31, 0x69f3cf97</code> HD6 to 4092 data bytes</li>
+<li>etc.</li>
+</ul>
+<h3 id="babs-crc-computational-cost"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/#babs-crc-computational-cost">BABS CRC - Computational Cost</a></h3>
+<p>Commonly used CRC polynomials require no more than 4 bytes to store the CRC.
+This means that conversion from <code>Base_256</code> to <code>Base_255</code> requires at most 4 modulo-division operations (if using the standard base conversion algorithm).</p>
+<p>On architectures supporting both integer multiplication and division this can be fast, eg. 2-12 cycles per division on ARM Cortex-M3 and above.
+On architectures supporting only integer multiplication, the modulo-division can be efficiently wrapped by a function performing multiplication by a constant <code>1/255</code>, which is around <a href="https://en.wikipedia.org/wiki/Division_algorithm">5 cycles per division</a>.</p>
+<p>Mileage may vary, but the overall computational cost of <code>BABS(CRC_X)</code> should be less than 30 instructions on most platforms.</p>
+<h3 id="scratching-the-surface"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/#scratching-the-surface">Scratching the Surface</a></h3>
+<p>HCBS is a simple hybridisation that offers some savings,
+but the real savings come when the Encapsulating Protocol makes use of them.</p>
+<p>I am developing one such protocol that I plan to release as FOSS.
+This will take some time, but if you're interested in helping let me know.</p>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -1129,13 +1310,13 @@ There are safer harbours ahead, and just as Peter could say "Lord Save Me!" so d
         
         
           
-          <a href="category/byte-stuffing/" class="md-footer__link md-footer__link--next" aria-label="Next: Byte Stuffing">
+          <a href="category/babs/" class="md-footer__link md-footer__link--next" aria-label="Next: BABS">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Byte Stuffing
+                BABS
               </div>
             </div>
             <div class="md-footer__button md-icon">
