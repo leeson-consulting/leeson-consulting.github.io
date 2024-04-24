@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../../">
+        <link rel="prev" href="../byte-stuffing/">
       
       
         <link rel="next" href="../crc/">
@@ -431,6 +431,8 @@
       
         
       
+        
+      
     
     
       
@@ -461,6 +463,29 @@
             Categories
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../byte-stuffing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Byte Stuffing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -736,6 +761,84 @@
     <div class="md-post__meta md-meta">
       <ul class="md-meta__list">
         <li class="md-meta__item">
+          <time datetime="2024-04-24 00:00:00">April 24, 2024</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="../crc/" class="md-meta__link">CRC</a>, 
+              <a href="./" class="md-meta__link">COBS</a>, 
+              <a href="../byte-stuffing/" class="md-meta__link">Byte Stuffing</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="base-adaptation-byte-stuffing-babs"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/">Base Adaptation Byte Stuffing (BABS)</a></h2>
+<p>We've looked at two methods of Byte Stuffing framed data, ie. HDLC and COBS.
+HDLC is fairly industrial.
+It gets the job done in a simple if not efficient way.
+COBS is a step up.
+It makes use of the structure of the underlying data to limit overhead in a consistent way.
+But there are other methods.</p>
+<p>The <em>best</em> I have found is called <a href="https://web.fe.up.pt/~jsc/publications/conferences/2007JaimeICC.pdf">Base Adaptation Byte Stuffing</a> (BABS).
+BABS is a first principles solution to the underlying problem developed by Jaime Cardoso of Universidade do Porto.</p>
+<p>If we treat the data is an enormous big-endian number in <code>Base_256</code>,
+then each digit of that number corresponds to each byte in the data.</p>
+<p>Now, just like any number we can convert data to a different base.
+Jaime chose to use <code>Base_255</code>, which of course has <em>one less value</em> than <code>Base_256</code>.</p>
+<p>Joining the dots we can see the big picture:</p>
+<blockquote>
+<p>Converting byte-oriented data to <code>Base_255</code> can be used to eliminate the Frame Delimeter from the data.</p>
+</blockquote>
+<div class="admonition customisation">
+<p class="admonition-title">Customisation</p>
+<p>Frame Delimeters aren't restricted to the value <code>255</code>, so how do you deal with the default COBS Terminator ie. <code>0x00</code>?
+First perform the base conversion. Then XOR each byte with <code>0x01</code>.</p>
+</div>
+<p>The conversion process expands the number of bits required to store the new number, so what's the transmission cost?
+Going back to high school maths we can say that a number A requiring N <code>Base_256</code> digits
+can be written as A' using M <code>Base_255</code> digits where:</p>
+<p><code>M = N * ceil(log_10(256) / log_10(255));</code></p>
+<p>Since the multiplier is constant and the expression is linear, we can precompute M for any N.
+BABS turns out to be very efficient, incuring 1 byte of overhead for every 1415 data bytes!
+This is close to the theorectical limit set by information theory - so we know we're done.</p>
+<h3 id="byte-stuffing-overhead-a-quick-comparison"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/#byte-stuffing-overhead-a-quick-comparison">Byte Stuffing Overhead - A Quick Comparison</a></h3>
+<p>BABS overhead is completely data agnostic - given the (usual) restriction of sending whole bytes.
+This in turn means that the <em>worst case</em> performance is the same as the <em>best case</em> performance.</p>
+<p>COBS overhead is slightly data gnostic.
+Data containing frequent <code>0x00</code> values will have a very low overhead - as low as one byte irrespective of length.
+But COBS <em>worst case</em> overhead is consistent, ie. 1 byte every 255 data bytes.</p>
+<p>HDLC overhead is very data gnostic.
+It presents no overhead if the data is devoid of <code>0x7e</code>,
+and 100% overhead if the data is competelt <code>0x7e</code>.
+The average performance levelling out to around twice that of the worst COBS performance.</p>
+<h3 id="whats-the-cost"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/#whats-the-cost">What's the Cost?</a></h3>
+<p>MIPS.</p>
+<p>Jaime made it clear that the algorithm used to convert <code>Base_256</code> data to <code>Base_255</code> data is <code>O(n^2)</code>.
+He suggested using a simple COBS / BABS hybrid approach for framing.
+When the data length was less than some computationally feasible bound - use BABS.
+Otherwise fall back to COBS, which is pretty efficient for moderate sized data anyway.</p>
+<p>We're going to follow this lead in the next post which looks at COBS + BABS hybridisation.</p>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
           <time datetime="2024-04-23 00:00:00">April 23, 2024</time></li>
         
           <li class="md-meta__item">
@@ -825,16 +928,16 @@ but the standard Frame Check Sequence (FCS) will be used to detect
 the corruption.</p>
 </blockquote>
 <p>Later in an example implementation we find the following comment:</p>
-<div class="language-c highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cm">/*</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="cm">* It turns out to be horribly complicated to support both the</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cm">* scan-ahead functions and the CRC calculation at the same time</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="cm">* since the last byte of the CRC (or even both bytes) may be 00.</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="cm">* Thus, it is necessary in this implementation to do the CRC</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="cm">* first and the COBS encoding second in two separate steps.  If</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="cm">* the COBS output were fed into a simple linear output buffer</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="cm">* big enough to hold the largest packet, then this could be</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="cm">* greatly simplified.</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="cm">*/</span>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cm">/*</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="cm">* It turns out to be horribly complicated to support both the</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="cm">* scan-ahead functions and the CRC calculation at the same time</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="cm">* since the last byte of the CRC (or even both bytes) may be 00.</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="cm">* Thus, it is necessary in this implementation to do the CRC</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="cm">* first and the COBS encoding second in two separate steps.  If</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="cm">* the COBS output were fed into a simple linear output buffer</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="cm">* big enough to hold the largest packet, then this could be</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="cm">* greatly simplified.</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="cm">*/</span>
 </span></code></pre></div>
 <p>So PPP COBS clearly favours calculating the FCS as a CRC applied to the PPP packet
 <strong>prior</strong> to COBS encoding since the CRC may itself contain <code>0x00</code> values
@@ -929,7 +1032,7 @@ These will be the subject of follow-up posts.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Qere and Ketiv - Written to be Read">
+          <a href="../byte-stuffing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Byte Stuffing">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -939,7 +1042,7 @@ These will be the subject of follow-up posts.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Qere and Ketiv - Written to be Read
+                Byte Stuffing
               </div>
             </div>
           </a>

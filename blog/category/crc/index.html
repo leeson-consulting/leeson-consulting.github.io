@@ -431,6 +431,8 @@
       
         
       
+        
+      
     
     
       
@@ -461,6 +463,29 @@
             Categories
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../byte-stuffing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Byte Stuffing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -729,6 +754,84 @@
       <header class="md-typeset">
         <h1 id="crc">CRC</h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2024-04-24 00:00:00">April 24, 2024</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="./" class="md-meta__link">CRC</a>, 
+              <a href="../cobs/" class="md-meta__link">COBS</a>, 
+              <a href="../byte-stuffing/" class="md-meta__link">Byte Stuffing</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="base-adaptation-byte-stuffing-babs"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/">Base Adaptation Byte Stuffing (BABS)</a></h2>
+<p>We've looked at two methods of Byte Stuffing framed data, ie. HDLC and COBS.
+HDLC is fairly industrial.
+It gets the job done in a simple if not efficient way.
+COBS is a step up.
+It makes use of the structure of the underlying data to limit overhead in a consistent way.
+But there are other methods.</p>
+<p>The <em>best</em> I have found is called <a href="https://web.fe.up.pt/~jsc/publications/conferences/2007JaimeICC.pdf">Base Adaptation Byte Stuffing</a> (BABS).
+BABS is a first principles solution to the underlying problem developed by Jaime Cardoso of Universidade do Porto.</p>
+<p>If we treat the data is an enormous big-endian number in <code>Base_256</code>,
+then each digit of that number corresponds to each byte in the data.</p>
+<p>Now, just like any number we can convert data to a different base.
+Jaime chose to use <code>Base_255</code>, which of course has <em>one less value</em> than <code>Base_256</code>.</p>
+<p>Joining the dots we can see the big picture:</p>
+<blockquote>
+<p>Converting byte-oriented data to <code>Base_255</code> can be used to eliminate the Frame Delimeter from the data.</p>
+</blockquote>
+<div class="admonition customisation">
+<p class="admonition-title">Customisation</p>
+<p>Frame Delimeters aren't restricted to the value <code>255</code>, so how do you deal with the default COBS Terminator ie. <code>0x00</code>?
+First perform the base conversion. Then XOR each byte with <code>0x01</code>.</p>
+</div>
+<p>The conversion process expands the number of bits required to store the new number, so what's the transmission cost?
+Going back to high school maths we can say that a number A requiring N <code>Base_256</code> digits
+can be written as A' using M <code>Base_255</code> digits where:</p>
+<p><code>M = N * ceil(log_10(256) / log_10(255));</code></p>
+<p>Since the multiplier is constant and the expression is linear, we can precompute M for any N.
+BABS turns out to be very efficient, incuring 1 byte of overhead for every 1415 data bytes!
+This is close to the theorectical limit set by information theory - so we know we're done.</p>
+<h3 id="byte-stuffing-overhead-a-quick-comparison"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/#byte-stuffing-overhead-a-quick-comparison">Byte Stuffing Overhead - A Quick Comparison</a></h3>
+<p>BABS overhead is completely data agnostic - given the (usual) restriction of sending whole bytes.
+This in turn means that the <em>worst case</em> performance is the same as the <em>best case</em> performance.</p>
+<p>COBS overhead is slightly data gnostic.
+Data containing frequent <code>0x00</code> values will have a very low overhead - as low as one byte irrespective of length.
+But COBS <em>worst case</em> overhead is consistent, ie. 1 byte every 255 data bytes.</p>
+<p>HDLC overhead is very data gnostic.
+It presents no overhead if the data is devoid of <code>0x7e</code>,
+and 100% overhead if the data is competelt <code>0x7e</code>.
+The average performance levelling out to around twice that of the worst COBS performance.</p>
+<h3 id="whats-the-cost"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/#whats-the-cost">What's the Cost?</a></h3>
+<p>MIPS.</p>
+<p>Jaime made it clear that the algorithm used to convert <code>Base_256</code> data to <code>Base_255</code> data is <code>O(n^2)</code>.
+He suggested using a simple COBS / BABS hybrid approach for framing.
+When the data length was less than some computationally feasible bound - use BABS.
+Otherwise fall back to COBS, which is pretty efficient for moderate sized data anyway.</p>
+<p>We're going to follow this lead in the next post which looks at COBS + BABS hybridisation.</p>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">

@@ -9,22 +9,22 @@
       
       
       
-        <link rel="prev" href="../leeson-consulting/">
+        <link rel="prev" href="../../">
       
       
-        <link rel="next" href="../../23/error-cascade-in-cobs-encoded-data/">
+        <link rel="next" href="../cobs/">
       
       
-      <link rel="icon" href="../../../../../assets/leeson_logo_192x192.png">
+      <link rel="icon" href="../../../assets/leeson_logo_192x192.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
     
     
       
-        <title>Fast-CRC: Off the shelf and on your way - Leeson Consulting</title>
+        <title>Byte Stuffing - Leeson Consulting</title>
       
     
     
-      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.bcfcd587.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.bcfcd587.min.css">
       
       
 
@@ -43,9 +43,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../../../stylesheets/leeson.css">
+      <link rel="stylesheet" href="../../../stylesheets/leeson.css">
     
-    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fast-crc-off-the-shelf-and-on-your-way" class="md-skip">
+        <a href="#byte-stuffing" class="md-skip">
           Skip to content
         </a>
       
@@ -78,9 +78,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../../.." title="Leeson Consulting" class="md-header__button md-logo" aria-label="Leeson Consulting" data-md-component="logo">
+    <a href="../../.." title="Leeson Consulting" class="md-header__button md-logo" aria-label="Leeson Consulting" data-md-component="logo">
       
-  <img src="../../../../../assets/leeson_logo.svg" alt="logo">
+  <img src="../../../assets/leeson_logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -97,7 +97,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Fast-CRC: Off the shelf and on your way
+              Byte Stuffing
             
           </span>
         </div>
@@ -166,7 +166,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
     
@@ -187,7 +187,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../../../" class="md-tabs__link">
+        <a href="../../" class="md-tabs__link">
           
   
     
@@ -207,7 +207,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../../license/" class="md-tabs__link">
+        <a href="../../../license/" class="md-tabs__link">
           
   
     
@@ -231,9 +231,7 @@
           
             
               
-                
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -244,9 +242,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../../.." title="Leeson Consulting" class="md-nav__button md-logo" aria-label="Leeson Consulting" data-md-component="logo">
+    <a href="../../.." title="Leeson Consulting" class="md-nav__button md-logo" aria-label="Leeson Consulting" data-md-component="logo">
       
-  <img src="../../../../../assets/leeson_logo.svg" alt="logo">
+  <img src="../../../assets/leeson_logo.svg" alt="logo">
 
     </a>
     Leeson Consulting
@@ -261,7 +259,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -311,7 +309,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -388,7 +386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../archive/2024/" class="md-nav__link">
+      <a href="../../archive/2024/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -414,8 +412,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -439,11 +439,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
         
           
           <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
@@ -457,7 +457,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             Categories
@@ -468,12 +468,23 @@
                 
   
   
-  
     
   
   
-    <li class="md-nav__item">
-      <a href="../../../../category/byte-stuffing/" class="md-nav__link">
+    
+      
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -482,6 +493,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -496,7 +508,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../category/cobs/" class="md-nav__link">
+      <a href="../cobs/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -519,7 +531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../category/crc/" class="md-nav__link">
+      <a href="../crc/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -542,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../category/foss/" class="md-nav__link">
+      <a href="../foss/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -565,7 +577,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../category/hello/" class="md-nav__link">
+      <a href="../hello/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -588,7 +600,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../category/leeson/" class="md-nav__link">
+      <a href="../leeson/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -611,7 +623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../category/ppp/" class="md-nav__link">
+      <a href="../ppp/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -689,7 +701,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../../license/" class="md-nav__link">
+      <a href="../../../license/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -718,8 +730,6 @@
             
             
               
-                
-              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -739,110 +749,102 @@
             
           
           
-  <div class="md-content md-content--post" data-md-component="content">
-    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
-      <div class="md-sidebar__scrollwrap">
-        <div class="md-sidebar__inner md-post">
-          <nav class="md-nav md-nav--primary">
-            <div class="md-post__back">
-              <div class="md-nav__title md-nav__container">
-                <a href="../../../../" class="md-nav__link">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-                  <span class="md-ellipsis">
-                    Back to index
-                  </span>
-                </a>
-              </div>
-            </div>
+  <div class="md-content" data-md-component="content">
+    <div class="md-content__inner">
+      <header class="md-typeset">
+        <h1 id="byte-stuffing">Byte Stuffing</h1>
+      </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2024-04-24 00:00:00">April 24, 2024</time></li>
+        
+          <li class="md-meta__item">
+            in
             
-            <ul class="md-post__meta md-nav__list">
-              <li class="md-nav__item md-nav__item--section">
-                <div class="md-post__title">
-                  <span class="md-ellipsis">
-                    Metadata
-                  </span>
-                </div>
-                <nav class="md-nav">
-                  <ul class="md-nav__list">
-                    <li class="md-nav__item">
-                      <div class="md-nav__link">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5v-5Z"/></svg>
-                        <time datetime="2024-04-19 00:00:00" class="md-ellipsis">April 19, 2024</time>
-                      </div>
-                    </li>
-                    
-                    
-                      <li class="md-nav__item">
-                        <div class="md-nav__link">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3H9m3 2 4 13 3-1-4-13-3 1M5 5v13h3V5H5M3 19v2h18v-2H3Z"/></svg>
-                          <span class="md-ellipsis">
-                            in
-                            
-                              <a href="../../../../category/crc/">CRC</a>, 
-                              <a href="../../../../category/foss/">FOSS</a></span>
-                        </div>
-                      </li>
-                    
-                    
-                      
-                      <li class="md-nav__item">
-                        <div class="md-nav__link">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7h1.5Z"/></svg>
-                          <span class="md-ellipsis">
-                            
-                              1 min read
-                            
-                          </span>
-                        </div>
-                      </li>
-                    
-                  </ul>
-                </nav>
-              </li>
-            </ul>
-          </nav>
+              <a href="../crc/" class="md-meta__link">CRC</a>, 
+              <a href="../cobs/" class="md-meta__link">COBS</a>, 
+              <a href="./" class="md-meta__link">Byte Stuffing</a></li>
+        
+        
           
-        </div>
-      </div>
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
     </div>
-    <article class="md-content__inner md-typeset">
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="base-adaptation-byte-stuffing-babs"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/">Base Adaptation Byte Stuffing (BABS)</a></h2>
+<p>We've looked at two methods of Byte Stuffing framed data, ie. HDLC and COBS.
+HDLC is fairly industrial.
+It gets the job done in a simple if not efficient way.
+COBS is a step up.
+It makes use of the structure of the underlying data to limit overhead in a consistent way.
+But there are other methods.</p>
+<p>The <em>best</em> I have found is called <a href="https://web.fe.up.pt/~jsc/publications/conferences/2007JaimeICC.pdf">Base Adaptation Byte Stuffing</a> (BABS).
+BABS is a first principles solution to the underlying problem developed by Jaime Cardoso of Universidade do Porto.</p>
+<p>If we treat the data is an enormous big-endian number in <code>Base_256</code>,
+then each digit of that number corresponds to each byte in the data.</p>
+<p>Now, just like any number we can convert data to a different base.
+Jaime chose to use <code>Base_255</code>, which of course has <em>one less value</em> than <code>Base_256</code>.</p>
+<p>Joining the dots we can see the big picture:</p>
+<blockquote>
+<p>Converting byte-oriented data to <code>Base_255</code> can be used to eliminate the Frame Delimeter from the data.</p>
+</blockquote>
+<div class="admonition customisation">
+<p class="admonition-title">Customisation</p>
+<p>Frame Delimeters aren't restricted to the value <code>255</code>, so how do you deal with the default COBS Terminator ie. <code>0x00</code>?
+First perform the base conversion. Then XOR each byte with <code>0x01</code>.</p>
+</div>
+<p>The conversion process expands the number of bits required to store the new number, so what's the transmission cost?
+Going back to high school maths we can say that a number A requiring N <code>Base_256</code> digits
+can be written as A' using M <code>Base_255</code> digits where:</p>
+<p><code>M = N * ceil(log_10(256) / log_10(255));</code></p>
+<p>Since the multiplier is constant and the expression is linear, we can precompute M for any N.
+BABS turns out to be very efficient, incuring 1 byte of overhead for every 1415 data bytes!
+This is close to the theorectical limit set by information theory - so we know we're done.</p>
+<h3 id="byte-stuffing-overhead-a-quick-comparison"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/#byte-stuffing-overhead-a-quick-comparison">Byte Stuffing Overhead - A Quick Comparison</a></h3>
+<p>BABS overhead is completely data agnostic - given the (usual) restriction of sending whole bytes.
+This in turn means that the <em>worst case</em> performance is the same as the <em>best case</em> performance.</p>
+<p>COBS overhead is slightly data gnostic.
+Data containing frequent <code>0x00</code> values will have a very low overhead - as low as one byte irrespective of length.
+But COBS <em>worst case</em> overhead is consistent, ie. 1 byte every 255 data bytes.</p>
+<p>HDLC overhead is very data gnostic.
+It presents no overhead if the data is devoid of <code>0x7e</code>,
+and 100% overhead if the data is competelt <code>0x7e</code>.
+The average performance levelling out to around twice that of the worst COBS performance.</p>
+<h3 id="whats-the-cost"><a class="toclink" href="../../2024/04/24/base-adaptation-byte-stuffing-babs/#whats-the-cost">What's the Cost?</a></h3>
+<p>MIPS.</p>
+<p>Jaime made it clear that the algorithm used to convert <code>Base_256</code> data to <code>Base_255</code> data is <code>O(n^2)</code>.
+He suggested using a simple COBS / BABS hybrid approach for framing.
+When the data length was less than some computationally feasible bound - use BABS.
+Otherwise fall back to COBS, which is pretty efficient for moderate sized data anyway.</p>
+<p>We're going to follow this lead in the next post which looks at COBS + BABS hybridisation.</p>
+    
+  </div>
+</article>
+      
       
         
-
-
-<h1 id="fast-crc-off-the-shelf-and-on-your-way">Fast-CRC: <em>Off the shelf and on your way</em></h1>
-<p>Fast-CRC 1.0.0 has been released on <a href="https://github.com/leeson-consulting/fast-crc/releases/tag/1.0.0">Github</a> under a permissive license (MS-PL).</p>
-<p>Fast-CRC provides tooling for generating efficient C99 Cyclic Redundancy Check (CRC) algorithms from pick and choose templates.</p>
-<p>Features:</p>
-<ul>
-<li>Every algorithm up to CRC-64 from Greg Cook's "CRC Catalog"</li>
-<li>Choice of 4-bit and 8-bit polynomial table-kernels</li>
-<li>Unit tested against published check values</li>
-<li>Dr. Nguyen's HD4 and HD6 "Fast CRC" algorithms</li>
-<li>Hamming profile database for every polynomial listed in Prof. Koopman's "CRC Zoo"</li>
-</ul>
-<p>This release has been tagged as <strong>NOT Production Ready</strong>.
-I'm looking for guinea-pigs to test the library --
-especially on Big-Endian architectures where it has had no testing to date due to a lack of hardware.</p>
+          
 
 
 
-
-
-
-
+<nav class="md-pagination">
   
-  
-
-
-
-
-  
-
-
-
+</nav>
+        
       
-    </article>
+    </div>
   </div>
 
           
@@ -855,12 +857,10 @@ especially on Big-Endian architectures where it has had no testing to date due t
   
     
       
-        
-      
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../leeson-consulting/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Leeson Consulting">
+          <a href="../../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Qere and Ketiv - Written to be Read">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -870,20 +870,20 @@ especially on Big-Endian architectures where it has had no testing to date due t
                 Previous
               </span>
               <div class="md-ellipsis">
-                Leeson Consulting
+                Qere and Ketiv - Written to be Read
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../23/error-cascade-in-cobs-encoded-data/" class="md-footer__link md-footer__link--next" aria-label="Next: Error Cascade in COBS Encoded Data">
+          <a href="../cobs/" class="md-footer__link md-footer__link--next" aria-label="Next: COBS">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Error Cascade in COBS Encoded Data
+                COBS
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -921,10 +921,10 @@ especially on Big-Endian architectures where it has had no testing to date due t
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../../../..", "features": ["navigation.indexes", "navigation.tabs", "navigation.footer", "content.code.copy", "content.code.select"], "search": "../../../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes", "navigation.tabs", "navigation.footer", "content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.1e8ae164.min.js"></script>
       
     
   </body>
