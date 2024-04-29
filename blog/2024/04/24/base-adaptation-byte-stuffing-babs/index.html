@@ -891,8 +891,10 @@ Jaime chose to use <code>Base_255</code>, which of course has <em>one less value
 </blockquote>
 <div class="admonition customisation">
 <p class="admonition-title">Customisation</p>
-<p>Frame Delimeters aren't restricted to the value <code>255</code>, so how do you deal with the default COBS Terminator ie. <code>0x00</code>?
-First perform the base conversion. Then XOR each byte with <code>0x01</code>.</p>
+<p>Frame Delimeters aren't restricted to the value <code>255</code>, so how do you deal with them?</p>
+<p>The default COBS Terminator <code>0x00</code> can be eliminated from the data by first performing the <code>Base_255</code> conversion,
+then <code>XOR</code>ing each byte with <code>0xff</code>.
+Other values can be elimated by transposition etc.</p>
 </div>
 <p>The conversion process expands the number of bits required to store the new number, so what's the transmission cost?
 Going back to high school maths we can say that a number A requiring N <code>Base_256</code> digits
