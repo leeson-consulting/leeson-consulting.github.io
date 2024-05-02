@@ -125,7 +125,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2"
-     inkscape:cx="239"
+     inkscape:cx="239.25"
      inkscape:cy="92"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -180,7 +180,7 @@
     <g
        id="g1">
       <rect
-         style="fill:#4051b5;fill-opacity:1;stroke:none;stroke-width:1.54959;stroke-dasharray:none"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:1.54959;stroke-dasharray:none"
          id="rect5"
          width="336.09937"
          height="106.98975"
@@ -280,13 +280,13 @@
       </g>
       <text
          xml:space="preserve"
-         style="font-size:35px;line-height:1.25;font-family:Denmark;-inkscape-font-specification:Denmark;stroke-width:0.9375;fill:#4051b5;fill-opacity:1"
+         style="font-size:35px;line-height:1.25;font-family:Denmark;-inkscape-font-specification:Denmark;stroke-width:0.9375"
          x="365.20358"
          y="577.09528"
          id="text11"><tspan
            sodipodi:role="line"
            id="tspan11"
-           style="stroke-width:0.9375;fill:#4051b5;fill-opacity:1"
+           style="stroke-width:0.9375"
            x="365.20358"
            y="577.09528" /></text>
     </g>
