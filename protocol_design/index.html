@@ -1,0 +1,1613 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../open_source/archive/2024/">
+      
+      
+        <link rel="next" href="category/babs/">
+      
+      
+      <link rel="icon" href="../assets/leeson_logo_192x192.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Communications Protocol Design - Leeson Consulting</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/leeson.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#communications-protocol-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title">
+      <div class="navbar-brand" /div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Haere mai
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../leeson/" class="md-tabs__link">
+          
+  
+    
+  
+  Leeson
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../open_source/" class="md-tabs__link">
+          
+  
+    
+  
+  Open Source
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+    
+  
+  Protocol Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../license/" class="md-tabs__link">
+        
+  
+    
+  
+  License
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Leeson Consulting" class="md-nav__button md-logo" aria-label="Leeson Consulting" data-md-component="logo">
+      
+  <img src="../assets/leeson_logo.svg" alt="logo">
+
+    </a>
+    Leeson Consulting
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Haere mai
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../leeson/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Leeson
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Leeson
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../leeson/archive/2024/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2024
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../leeson/category/hello/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../leeson/category/leeson/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Leeson
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../open_source/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Open Source
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Open Source
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../open_source/archive/2024/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2024
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../open_source/category/crc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CRC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  <span class="md-ellipsis">
+    Protocol Design
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Protocol Design
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="archive/2024/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2024
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/babs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BABS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/byte-stuffing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Byte Stuffing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/cobs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    COBS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/crc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CRC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/checksums/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Checksums
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/hashes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hashes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/ppp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PPP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="category/protocol-design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Protocol Design
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../license/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content" data-md-component="content">
+    <div class="md-content__inner">
+      <header class="md-typeset">
+        <h1 id="communications-protocol-design">Communications Protocol Design</h1>
+      </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2024-04-25 00:00:00">April 25, 2024</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/checksums/" class="md-meta__link">Checksums</a>, 
+              <a href="category/crc/" class="md-meta__link">CRC</a>, 
+              <a href="category/hashes/" class="md-meta__link">Hashes</a>, 
+              <a href="category/cobs/" class="md-meta__link">COBS</a>, 
+              <a href="category/babs/" class="md-meta__link">BABS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="hybrid-cobs-babs-hcbs"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/">Hybrid COBS + BABS (HCBS)</a></h2>
+<p>This post builds on what we've seen from COBS and BABS
+to define a simple hybridisation of the two
+that is not susceptible to error cascade
+while balancing transmission and computational overhead.</p>
+<h3 id="initial-cobs-link"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/#initial-cobs-link">Initial COBS Link</a></h3>
+<p>The classical COBS chain starts with a COBS Link Byte.
+This guarantees no additional overhead for the next 255 bytes.
+But since data lengths are often shorter than this,
+it raises the question of whether the initial COBS Link can be made smaller.</p>
+<p>HCBS permits the Encapsulating Protocol to define the width of the initial COBS Link.
+For short messages, a 5-bit or even 4-bit link may be sufficient.</p>
+<p>Relaxing this restriction allows the initial COBS Link to be worked into the Protocol's Frame Header,
+should the design accomodate.</p>
+<p>The potential benefit is obvious - one less byte overhead for short messages.</p>
+<h3 id="babs-crc-space-cost"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/#babs-crc-space-cost">BABS CRC - Space Cost</a></h3>
+<p>As we saw earlier, the Byte Stuffing mechanism may present issues for data CRCs.
+For COBS, the simple approach of Byte Stuffing the data and its CRC together can compromise error detection.
+However, the alternative of separately Byte Stuffing the CRC of the COBS-data increases transmission overhead.</p>
+<p>A solution to these problems is to:</p>
+<ol>
+<li>Calculate the COBS-data CRC,</li>
+<li>Using a lower degree polynomial than normal,</li>
+<li>Then BABS the CRC,</li>
+<li>And append to the COBS-data</li>
+</ol>
+<p><code>BABS(CRC_Degree)</code> will add <em>at most</em> one bit overhead, which means that <code>BABS(CRC_15)</code> takes the same space as <code>CRC_16</code>.
+Similarly, <code>BABS(CRC_31)</code> takes the same space as <code>CRC_32</code>.</p>
+<p>Specific polynomial choices depend on the design requirements, but some <em>good</em> lower degree polynomials include:</p>
+<ul>
+<li><code>CRC-15, 0x60d</code> HD4 to 2046 data bytes</li>
+<li><code>CRC-15, 0x2e75</code> HD6 to 14 data bytes</li>
+<li><code>CRC-23, 0x5781eb</code> HD6 to 253 data bytes</li>
+<li><code>CRC-31, 0x69f3cf97</code> HD6 to 4092 data bytes</li>
+<li>etc.</li>
+</ul>
+<h3 id="babs-crc-computational-cost"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/#babs-crc-computational-cost">BABS CRC - Computational Cost</a></h3>
+<p>Commonly used CRC polynomials require no more than 4 bytes to store the CRC.
+This means that conversion from <code>Base_256</code> to <code>Base_255</code> requires at most 4 modulo-division operations (if using the standard base conversion algorithm).</p>
+<p>On architectures supporting both integer multiplication and division this can be fast, eg. 2-12 cycles per division on ARM Cortex-M3 and above.
+On architectures supporting only integer multiplication, the modulo-division can be efficiently wrapped by a function performing multiplication by a constant <code>1/255</code>, which is around <a href="https://en.wikipedia.org/wiki/Division_algorithm">5 cycles per division</a>.</p>
+<p>Mileage may vary, but the overall computational cost of <code>BABS(CRC_X)</code> should be less than 30 instructions on most platforms.</p>
+<h3 id="scratching-the-surface"><a class="toclink" href="2024/04/25/hybrid-cobs--babs-hcbs/#scratching-the-surface">Scratching the Surface</a></h3>
+<p>HCBS is a simple hybridisation that offers some savings,
+but the real savings come when the Encapsulating Protocol makes use of them.</p>
+<p>I am developing one such protocol that I plan to release as FOSS.
+This will take some time, but if you're interested in helping let me know.</p>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2024-04-24 00:00:00">April 24, 2024</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/crc/" class="md-meta__link">CRC</a>, 
+              <a href="category/cobs/" class="md-meta__link">COBS</a>, 
+              <a href="category/byte-stuffing/" class="md-meta__link">Byte Stuffing</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="base-adaptation-byte-stuffing-babs"><a class="toclink" href="2024/04/24/base-adaptation-byte-stuffing-babs/">Base Adaptation Byte Stuffing (BABS)</a></h2>
+<p>We've looked at two methods of Byte Stuffing framed data, ie. HDLC and COBS.
+HDLC is fairly industrial.
+It gets the job done in a simple if not efficient way.
+COBS is a step up.
+It makes use of the structure of the underlying data to limit overhead in a consistent way.
+But there are other methods.</p>
+<p>The <em>best</em> I have found is called <a href="https://web.fe.up.pt/~jsc/publications/conferences/2007JaimeICC.pdf">Base Adaptation Byte Stuffing</a> (BABS).
+BABS is a first principles solution to the underlying problem developed by Jaime Cardoso of Universidade do Porto.</p>
+<p>If we treat the data is an enormous big-endian number in <code>Base_256</code>,
+then each digit of that number corresponds to each byte in the data.</p>
+<p>Now, just like any number we can convert data to a different base.
+Jaime chose to use <code>Base_255</code>, which of course has <em>one less value</em> than <code>Base_256</code>.</p>
+<p>Joining the dots we can see the big picture:</p>
+<blockquote>
+<p>Converting byte-oriented data to <code>Base_255</code> can be used to eliminate the Frame Delimeter from the data.</p>
+</blockquote>
+<div class="admonition customisation">
+<p class="admonition-title">Customisation</p>
+<p>Frame Delimeters aren't restricted to the value <code>255</code>, so how do you deal with them?</p>
+<p>The default COBS Terminator <code>0x00</code> can be eliminated from the data by first performing the <code>Base_255</code> conversion,
+then <code>XOR</code>ing each byte with <code>0xff</code>.
+Other values can be elimated by transposition etc.</p>
+</div>
+<p>The conversion process expands the number of bits required to store the new number, so what's the transmission cost?
+Going back to high school maths we can say that a number A requiring N <code>Base_256</code> digits
+can be written as A' using M <code>Base_255</code> digits where:</p>
+<p><code>M = N * ceil(log_10(256) / log_10(255));</code></p>
+<p>Since the multiplier is constant and the expression is linear, we can precompute M for any N.
+BABS turns out to be very efficient, incuring 1 byte of overhead for every 1415 data bytes!
+This is close to the theorectical limit set by information theory - so we know we're done.</p>
+<h3 id="byte-stuffing-overhead-a-quick-comparison"><a class="toclink" href="2024/04/24/base-adaptation-byte-stuffing-babs/#byte-stuffing-overhead-a-quick-comparison">Byte Stuffing Overhead - A Quick Comparison</a></h3>
+<p>BABS overhead is completely data agnostic - given the (usual) restriction of sending whole bytes.
+This in turn means that the <em>worst case</em> performance is the same as the <em>best case</em> performance.</p>
+<p>COBS overhead is slightly data gnostic.
+Data containing frequent <code>0x00</code> values will have a very low overhead - as low as one byte irrespective of length.
+But COBS <em>worst case</em> overhead is consistent, ie. 1 byte every 255 data bytes.</p>
+<p>HDLC overhead is very data gnostic.
+It presents no overhead if the data is devoid of <code>0x7e</code>,
+and 100% overhead if the data is competelt <code>0x7e</code>.
+The average performance levelling out to around twice that of the worst COBS performance.</p>
+<h3 id="whats-the-cost"><a class="toclink" href="2024/04/24/base-adaptation-byte-stuffing-babs/#whats-the-cost">What's the Cost?</a></h3>
+<p>MIPS.</p>
+<p>Jaime made it clear that the algorithm used to convert <code>Base_256</code> data to <code>Base_255</code> data is <code>O(n^2)</code>.
+He suggested using a simple COBS / BABS hybrid approach for framing.
+When the data length was less than some computationally feasible bound - use BABS.
+Otherwise fall back to COBS, which is pretty efficient for moderate sized data anyway.</p>
+<p>We're going to follow this lead in the next post which looks at COBS + BABS hybridisation.</p>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2024-04-23 00:00:00">April 23, 2024</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/crc/" class="md-meta__link">CRC</a>, 
+              <a href="category/ppp/" class="md-meta__link">PPP</a>, 
+              <a href="category/cobs/" class="md-meta__link">COBS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              7 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="error-cascade-in-cobs-encoded-data"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/">Error Cascade in COBS Encoded Data</a></h2>
+<p>Consistent Overhead Byte Stuffing (COBS) is used to frame byte-oriented communications and is described in detail in <a href="https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing">Wikipedia</a> and elsewhere.
+COBS is used as a lower overhead alternative to HDLC Byte Stuffing.</p>
+<h3 id="cobs-overview"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#cobs-overview">COBS Overview</a></h3>
+<p>A short explanation of COBS is that it replaces each <code>0x00</code> encountered in the data
+with a linked list of the distances between each <code>0x00</code>.
+Since the links can never be <code>0x00</code>,
+the only overhead is the insertion of COBS Link-Bytes
+to bridge the gaps between those <code>0x00</code> values more than 255 bytes apart.</p>
+<p>COBS treats data exhausted of (or not containing) <code>0x00</code> as having a final <code>0x00</code> at the end of data.
+This dictates the repeated insertion of COBS Link-Bytes until the final link,
+which sets the location of the <code>0x00</code> Frame Terminator <em>sealing</em> the COBS frame.</p>
+<p>Each COBS Link-Byte adds overhead at a consistent <em>worst-case rate</em> of 1/255 of the message length.
+This is much better than the <em>worst-case rate</em> for HDLC Byte Stuffing, which is twice the message length.</p>
+<div class="admonition overhead">
+<p class="admonition-title">Overhead</p>
+<p>HDLC Byte Stuffing overhead is very sensitive to message content.
+Uniformly distributed random data (eg. encrypted data), achieves an average overhead of 2/256.
+However, high overhead is associated with data containin many HDLC <em>Frame Sequence</em> (<code>0x7e</code>) bytes or <em>Control Escape</em> (<code>0x7d</code>) bytes.</p>
+<p>COBS, by contrast, is <strong>not</strong> very sensitive to message content.
+The worst and average overhead for random data is the same.
+The lowest overhead is the reciprocal of the message length, which is achieved by messages containing 0x00 at least once every 255 bytes.</p>
+</div>
+<h3 id="cobs-checksum-interactions"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#cobs-checksum-interactions">COBS Checksum Interactions</a></h3>
+<p>COBS is simply a framing scheme and does not define checksum requirements per se.</p>
+<p>Nevertheless a COBS receiver can correctly frame COBS encoded data 99.6% of the time due to the self-sealing nature of the frame.
+Undetected errors can still occur, but the frames themselves should be generally identifiable.</p>
+<p>Things become more complex when a checksum is added to detect data corruptions.</p>
+<p>If the checksum contains <code>0x00</code> then it will either need to be placed outside the frame or encoded so that it can be placed within the frame.
+Placing the checksum outside the frame introduces problems with frame synchronisation and should be avoided except under controlled conditions.
+COBS encoding the checksum adds immediate overhead in the form of a Link-Byte and generally complicates the process.</p>
+<h3 id="ppp-cobs-checksums"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#ppp-cobs-checksums">PPP COBS Checksums</a></h3>
+<p>Stuart Cheshire presented COBS for his <a href="http://stuartcheshire.org/papers/Dissertation.ps">PhD</a>,
+and originally at <a href="http://stuartcheshire.org/papers/COBSforSIGCOMM.ps">SIGCOMM '97</a>.
+The focus for these and other discussions of COBS was around the reduced overhead compared to HDLC-style Byte Stuffing.</p>
+<p>The initial COBS application was intended for PPP,
+which can be seen in the <a href="https://www.ietf.org/archive/id/draft-ietf-pppext-cobs-00.txt">PPP COBS Proposal</a>
+written around the same time as his PhD.
+PPP itself is described in <a href="https://datatracker.ietf.org/doc/html/rfc1662.html">RFC 1662</a>
+and <strong>does</strong> specify the use of a "... Frame Check Sequence for error detection":</p>
+<blockquote>
+<p>The FCS field is calculated over all bits of the Address, Control,
+Protocol, Information and Padding fields, not including any start
+and stop bits (asynchronous) nor any bits (synchronous) or octets
+(asynchronous or synchronous) inserted for transparency.  This
+also does not include the Flag Sequences nor the FCS field itself.</p>
+<p>When octets are received which are flagged in the Async-
+Control-Character-Map, they are discarded before calculating
+the FCS.</p>
+</blockquote>
+<p>The <em>Async-Control-Character-Map</em> is outside the scope of present discussions,
+aside from noting that it includes the HDLC <em>Frame Sequence</em> (<code>0x7e</code>) and
+<em>Control Escape</em> (<code>0x7d</code>) used to perform Byte Stuffing.</p>
+<p>However, in the PPP COBS Proposal the self-sealing nature of COBS Frames leads to the observation that:</p>
+<blockquote>
+<p>If one of the code byte octets is lost or corrupted, then the block
+will be miscounted.  This is likely to ultimately result in the
+inclusion of the trailing 7E within the data portion of an erroneous
+COBS block.  The receiver will detect this as either an error (if it
+does not support preemption) or as a preempted message.  In the
+latter case, the falsely preempted message will be discarded when the
+next true preemption occurs.  If the 7E still falls on a natural
+boundary between COBS blocks, then COBS will not detect the error,
+but the standard Frame Check Sequence (FCS) will be used to detect
+the corruption.</p>
+</blockquote>
+<p>Later in an example implementation we find the following comment:</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cm">/*</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="cm">* It turns out to be horribly complicated to support both the</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="cm">* scan-ahead functions and the CRC calculation at the same time</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="cm">* since the last byte of the CRC (or even both bytes) may be 00.</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="cm">* Thus, it is necessary in this implementation to do the CRC</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="cm">* first and the COBS encoding second in two separate steps.  If</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="cm">* the COBS output were fed into a simple linear output buffer</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="cm">* big enough to hold the largest packet, then this could be</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="cm">* greatly simplified.</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="cm">*/</span>
+</span></code></pre></div>
+<p>So PPP COBS clearly favours calculating the FCS as a CRC applied to the PPP packet
+<strong>prior</strong> to COBS encoding since the CRC may itself contain <code>0x00</code> values
+that would then need to be Byte Stuffed to ensure frame delineation.</p>
+<p>PPP COBS is not alone in this regard.</p>
+<p><strong>Every</strong> COBS recommendation and implementation I have seen chooses to append a checksum to the data prior to COBS encoding.
+While this is much simpler, it can significantly reduce the strength of the checksum as we shall see.</p>
+<h3 id="cobs-error-cascade"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#cobs-error-cascade">COBS Error Cascade</a></h3>
+<p>When any link in a COBS chain is corrupted, the COBS decoder will incorrectly decode the next and subsequent links.
+A single COBS link error can cascade into multiple errors at a rate of 8 bits per link (on average for uniform random data).
+When the underlying data contains <code>0x00</code> values or is simply <em>long enough</em>, many corruptions will occur due to the abundance of links.</p>
+<p>The following example shows a slice through some COBS data as it was sent (error free).
+The green <code>link(x)</code> bytes represent the COBS chain, with arbitrary non-zero data in between.</p>
+<p><img alt="COBS Data - As sent" src="content/cobs_error_cascade_example_as_sent.svg" /></p>
+<p>Now consider the same COBS data as received.
+A single bit error has occurred in the first link shown, turning <code>link(5)</code> into <code>link(1)</code>.
+The COBS decoder will now follow the path highlighted by the orange bytes,
+while at the same time skipping over the actual link bytes highlighted in cyan.</p>
+<p><img alt="COBS Data - As received" src="content/cobs_error_cascade_example_as_received.svg" /></p>
+<p>After a few links the chain is restored at <code>link(42)</code> and continues unaffected to <em>seal</em> the frame,
+making the received error undetectable to the frame length check.</p>
+<p>In this contrived example, the COBS decoder will produce an additional 8 errors as the result of a single error in the first link.
+This can be far worse in general.</p>
+<h3 id="the-effect-of-error-cascade-on-error-detection"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#the-effect-of-error-cascade-on-error-detection">The Effect of Error Cascade on Error Detection</a></h3>
+<p>If a checksum is used to detect data corruptions
+and that checksum is applied to the COBS encoded data,
+the checksum will be able to gate the decoding process
+thus generally avoiding the error cascade.</p>
+<p>However, if the checksum is applied to the unencoded data
+the checksum will not gate the decoding process.
+Instead the checksum will be asked to detect the error cascade
+introduced by the decoding process.</p>
+<p>If a CRC is used as the checksum, it may be able to detect some of the cascade as error bursts.
+But even it does, its error detection performance <strong>will be compromised</strong> making it less able to detect received errors.</p>
+<p>For this to cause an actual problem an error has to occur in one of the COBS links and the CRC check needs to fail (False Negative).
+This may be rare in practice for encrypted data, but data heavily biased with <code>0x00</code> values will be susceptible.</p>
+<p>This kind of zero-rich data occurs commonly enough in the wild for it to form the basis of <a href="https://capnproto.org/encoding.html">CAP'N PROTO's "Packing" Scheme</a>
+For instance small valued, multi-byte integers often have <code>0x00</code> MS-Bytes, Flag-fields tend to default to <code>0x00</code>, Embedded strings have NUL terminators, etc.</p>
+<p>Putting the likihood of a perfect storm aside for the moment,
+we can say in the case of a COBS Error Cascade affecting a COBS frame,
+the probability of an undetected error where a CRC is applied to the unencoded data tends towards:</p>
+<p><code>1/255 * 1/2^crc_poly_degree</code></p>
+<p>While this is low, it is many orders of magnitude worse
+than the unconditional probability of an undetected error
+in a COBS frame where the COBS encoded data is protected by the same CRC.</p>
+<h3 id="efficient-checksum-encoding"><a class="toclink" href="2024/04/23/error-cascade-in-cobs-encoded-data/#efficient-checksum-encoding">Efficient Checksum Encoding</a></h3>
+<p>While the benefits of applying the CRC to the COBS encoded data are clear,
+methods for efficiently encoding the CRC for the frame are not.</p>
+<p>COBS encoding the CRC adds an additional COBS Link-Byte,
+which makes the best COBS overhead approach that of the average HDLC overhead.</p>
+<p>Modifying frame detection to use a <code>0x00</code> to mark the start of frame
+and a length field to locate the CRC could also be used with care.
+But this would not suit PPP COBS which uses <code>0x7e</code> as an HDLC-compatible COBS Terminator.</p>
+<p>Reserving two flag bits in the CRC field allows for CRC-14 to be used in place of CRC-16.
+Setting each bit to 1 when the corresponding byte in the CRC is <code>0x00</code>
+ensures that the CRC value is always compatible with the frame.</p>
+<p>This is ok, as long as the replacement CRC-14 can perform as well as the original CRC-16.
+However the overhead increases to four bits for for CRC-32, which limits CRC replacements to CRC-28 or less.</p>
+<p>A minature 3-bit COBS link could prefix the CRC data in a similar vein.
+But this gets complicated and only offers one more bit over using flags for CRC-32.</p>
+<p>So are there any better approaches?
+It turns out that the answer is yes.
+These will be the subject of follow-up posts.</p>
+    
+  </div>
+</article>
+      
+      
+        
+          
+
+
+
+<nav class="md-pagination">
+  
+</nav>
+        
+      
+    </div>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../open_source/archive/2024/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2024">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                2024
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="category/babs/" class="md-footer__link md-footer__link--next" aria-label="Next: BABS">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                BABS
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 Leeson Consulting Ltd.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.tabs", "navigation.footer", "content.code.copy", "content.code.select"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>
